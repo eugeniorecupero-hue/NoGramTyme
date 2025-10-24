@@ -20,42 +20,25 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
-        with:
-          api-level: 34
-          target: android-34
-          build-tools: "34.0.0"
 
-      - name: Setup Gradle (wrapperless OK)
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      # 🔎 Trova automaticamente la cartella del progetto (quella che contiene settings.gradle*).
-      - name: Detect Gradle project dir
-        id: detect
-        shell: bash
+      - name: Make gradlew executable
+        run: chmod +x gradlew || echo "No gradlew found, will create wrapper"
+
+      - name: Create Gradle Wrapper if missing
         run: |
-          set -euo pipefail
-          # cerca settings.gradle(.kts)
-          file="$(git ls-files -z | tr '\0' '\n' | grep -E '(^|/)(settings\.gradle(\.kts)?)$' | head -n1 || true)"
-          if [ -z "$file" ]; then
-            echo "❌ Nessun settings.gradle trovato." >&2
-            exit 1
+          if [ ! -f gradlew ]; then
+            gradle wrapper --gradle-version 8.4
           fi
-          dir="$(dirname "$file")"
-          if [ "$dir" = "." ]; then dir=""; fi
-          echo "PROJECT_DIR=$dir" >> "$GITHUB_ENV"
-          echo "Trovato settings in: ${dir:-<repo root>}"
 
       - name: Build Debug APK
-        shell: bash
-        run: |
-          cd "${PROJECT_DIR:-.}"
-          echo "Working dir: $(pwd)"
-          gradle :app:assembleDebug
+        run: ./gradlew :app:assembleDebug --stacktrace
 
       - name: Upload APK artifact
-        if: always()
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: NoGramTime-debug
-          path: |
-            ${PROJECT_DIR}/app/build/outputs/apk/debug/app-debug.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
