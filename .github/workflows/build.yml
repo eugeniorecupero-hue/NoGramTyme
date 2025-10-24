@@ -18,23 +18,32 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-          cache: 'gradle'
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          cmdline-tools-version: 11076708
+
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses || true
+
+      - name: Install Android SDK components
+        run: |
+          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew assembleDebug --no-daemon --stacktrace
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug --no-daemon --stacktrace --warning-mode all
 
-      - name: Find APK
-        run: find . -name "*.apk" -type f
+      - name: List APK files
+        if: always()
+        run: find . -name "*.apk" -type f -ls
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
+        if: success()
         with:
           name: app-debug
           path: app/build/outputs/apk/debug/*.apk
-          if-no-files-found: error
