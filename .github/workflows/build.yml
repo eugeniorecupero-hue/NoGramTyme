@@ -34,11 +34,21 @@ jobs:
           fi
 
       - name: Build Debug APK
-        run: ./gradlew :app:assembleDebug --stacktrace --info 2>&1 | tee build.log || (tail -200 build.log && exit 1)
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: List build outputs
+        if: always()
+        run: |
+          echo "=== Listing all APK files ==="
+          find . -name "*.apk" -type f
+          echo "=== Listing app/build directory ==="
+          ls -R app/build/ || echo "app/build directory not found"
 
       - name: Upload APK artifact
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: NoGramTime-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: |
+            **/*.apk
+            app/build/outputs/apk/**/*.apk
