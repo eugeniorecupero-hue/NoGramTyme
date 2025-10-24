@@ -34,7 +34,7 @@ jobs:
           fi
 
       - name: Build Debug APK
-        run: ./gradlew :app:assembleDebug --stacktrace
+        run: ./gradlew :app:assembleDebug --stacktrace --info 2>&1 | tee build.log || (tail -200 build.log && exit 1)
 
       - name: Upload APK artifact
         if: success()
