@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NoGram Time</string>
+    <string name="overlay_default_message">Instagram è bloccato in questo momento. Prenditi una pausa!</string>
+    <string name="exit">Esci</string>
+    <string name="accessibility_service_description">Servizio per bloccare Instagram durante le finestre programmate.</string>
+    <string name="permission_overlay_required">Per funzionare correttamente è necessario consentire all’app di disegnare sopra le altre app.</string>
+    <string name="permission_accessibility_required">Abilita il servizio di accessibilità per consentire il blocco di Instagram.</string>
+    <string name="permission_admin_required">Attiva l’amministratore dispositivo per evitare la rimozione accidentale dell’app.</string>
+    <string name="enable_vpn">Abilita VPN</string>
+    <string name="disable_vpn">Disabilita VPN</string>
+    <string name="pin_setup">Imposta PIN</string>
+    <string name="pin_confirm">Conferma PIN</string>
+    <string name="pin_incorrect">PIN errato</string>
+    <string name="home_status_blocked">Instagram è attualmente bloccato</string>
+    <string name="home_status_unblocked">Instagram non è bloccato</string>
+    <string name="home_next_block">Prossimo blocco: %1$s</string>
+</resources>
